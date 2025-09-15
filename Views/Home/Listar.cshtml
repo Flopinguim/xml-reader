@@ -1,0 +1,120 @@
+@* @model List<xml_reader.Models.NotaFiscal>
+@{
+    ViewData["Title"] = "Lista de Notas Fiscais";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Lista de Notas Fiscais</h1>
+                <div>
+                    <a asp-action="Index" class="btn btn-primary">
+                        <i class="fas fa-upload"></i> Novo Upload
+                    </a>
+                    <a asp-action="Buscar" class="btn btn-outline-secondary">
+                        <i class="fas fa-search"></i> Buscar
+                    </a>
+                </div>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">
+                    <h4>Nenhuma nota fiscal encontrada</h4>
+                    <p>Faça o upload de arquivos XML para começar a processar notas fiscais.</p>
+                    <a asp-action="Index" class="btn btn-primary">Fazer Upload</a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-success">
+                    <strong>@Model.Count</strong> nota(s) fiscal(is) encontrada(s).
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Número</th>
+                                <th>CNPJ Prestador</th>
+                                <th>CNPJ Tomador</th>
+                                <th>Data Emissão</th>
+                                <th>Valor Total</th>
+                                <th>Processado em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var nota in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@nota.NumeroNota</strong>
+                                    </td>
+                                    <td>
+                                        <span class="font-monospace">@nota.CnpjPrestador</span>
+                                    </td>
+                                    <td>
+                                        <span class="font-monospace">@nota.CnpjTomador</span>
+                                    </td>
+                                    <td>
+                                        @nota.DataEmissao.ToString("dd/MM/yyyy")
+                                    </td>
+                                    <td>
+                                        <span class="text-success fw-bold">
+                                            @nota.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @nota.DataProcessamento.ToString("dd/MM/yyyy HH:mm")
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <a asp-action="Detalhes" asp-route-id="@nota.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-eye"></i> Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (Model.Any())
+                {
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Resumo</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6>Total de Notas:</h6>
+                                            <p class="h4 text-primary">@Model.Count</p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Valor Total:</h6>
+                                            <p class="h4 text-success">
+                                                @Model.Sum(n => n.ValorTotal).ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <h6>Última Emissão:</h6>
+                                            <p class="h6 text-muted">
+                                                @Model.Max(n => n.DataEmissao).ToString("dd/MM/yyyy")
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div> *@

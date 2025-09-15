@@ -1,0 +1,111 @@
+﻿@model xml_reader.ViewModels.UploadXmlViewModel
+@{
+    ViewData["Title"] = "Leitor de XML - Notas Fiscais";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">Sistema de Leitura de XML - Notas Fiscais de Serviço</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Upload de Arquivos XML</h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.HasErrors)
+                    {
+                        <div class="alert alert-danger">
+                            <h4>Erros encontrados:</h4>
+                            <ul>
+                                @foreach (var error in Model.ErrorMessages)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (Model.ProcessingResults.Any())
+                    {
+                        <div class="alert alert-success">
+                            <h4>Processamento concluído:</h4>
+                            <ul>
+                                @foreach (var result in Model.ProcessingResults)
+                                {
+                                    <li>@result</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <form asp-action="Index" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label asp-for="XmlFiles" class="form-label"></label>
+                            <input asp-for="XmlFiles" type="file" class="form-control" multiple accept=".xml" />
+                            <span asp-validation-for="XmlFiles" class="text-danger"></span>
+                            <div class="form-text">
+                                Selecione um ou mais arquivos XML de notas fiscais de serviço (NFS-e).
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Processar Arquivos XML
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Listar Notas Fiscais</h5>
+                            <p class="card-text">Visualize todas as notas fiscais processadas</p>
+                            <a asp-action="Listar" class="btn btn-outline-primary">
+                                <i class="fas fa-list"></i> Ver Lista
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Buscar Notas Fiscais</h5>
+                            <p class="card-text">Pesquise notas fiscais por critérios específicos</p>
+                            <a asp-action="Buscar" class="btn btn-outline-secondary">
+                                <i class="fas fa-search"></i> Buscar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Informações sobre o Sistema</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>Este sistema é capaz de processar arquivos XML de Notas Fiscais de Serviço (NFS-e) e extrair as seguintes informações:</p>
+                        <ul>
+                            <li><strong>Número da Nota:</strong> Identificação única da nota fiscal</li>
+                            <li><strong>CNPJ do Prestador:</strong> Documento do fornecedor do serviço</li>
+                            <li><strong>CNPJ do Tomador:</strong> Documento do contratante do serviço</li>
+                            <li><strong>Data de Emissão:</strong> Quando a nota foi emitida</li>
+                            <li><strong>Descrição do Serviço:</strong> Detalhes dos serviços prestados</li>
+                            <li><strong>Valor Total:</strong> Valor monetário dos serviços</li>
+                        </ul>
+                        <p class="text-muted">
+                            Os dados extraídos são armazenados em um banco de dados SQL Server para consulta posterior.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,133 @@
+@* @model xml_reader.Models.NotaFiscal
+@{
+    ViewData["Title"] = "Detalhes da Nota Fiscal";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Detalhes da Nota Fiscal</h1>
+                <div>
+                    <a asp-action="Listar" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar à Lista
+                    </a>
+                    <a asp-action="Buscar" class="btn btn-outline-secondary">
+                        <i class="fas fa-search"></i> Nova Busca
+                    </a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="fas fa-file-invoice"></i>
+                        Nota Fiscal Nº @Model.NumeroNota
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-primary">Informações Principais</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Número da Nota:</strong></td>
+                                    <td>@Model.NumeroNota</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Data de Emissão:</strong></td>
+                                    <td>@Model.DataEmissao.ToString("dd/MM/yyyy")</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Valor Total:</strong></td>
+                                    <td>
+                                        <span class="h5 text-success">
+                                            @Model.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Arquivo de Origem:</strong></td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(Model.NomeArquivo))
+                                        {
+                                            <span class="badge bg-info">@Model.NomeArquivo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Não informado</span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Processado em:</strong></td>
+                                    <td>
+                                        <small class="text-muted">
+                                            @Model.DataProcessamento.ToString("dd/MM/yyyy HH:mm:ss")
+                                        </small>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="text-primary">Prestador de Serviço</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>CNPJ:</strong></td>
+                                    <td>
+                                        <span class="font-monospace">
+                                            @($"{Model.CnpjPrestador.Substring(0, 2)}.{Model.CnpjPrestador.Substring(2, 3)}.{Model.CnpjPrestador.Substring(5, 3)}/{Model.CnpjPrestador.Substring(8, 4)}-{Model.CnpjPrestador.Substring(12, 2)}")
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <h5 class="text-primary mt-4">Tomador de Serviço</h5>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>CNPJ:</strong></td>
+                                    <td>
+                                        <span class="font-monospace">
+                                            @($"{Model.CnpjTomador.Substring(0, 2)}.{Model.CnpjTomador.Substring(2, 3)}.{Model.CnpjTomador.Substring(5, 3)}/{Model.CnpjTomador.Substring(8, 4)}-{Model.CnpjTomador.Substring(12, 2)}")
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-md-12">
+                            <h5 class="text-primary">Descrição do Serviço</h5>
+                            <div class="border rounded p-3 bg-light">
+                                <p class="mb-0">@Model.DescricaoServico</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Informações Técnicas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <small class="text-muted">ID no Sistema:</small><br>
+                            <strong>@Model.Id</strong>
+                        </div>
+                        <div class="col-md-3">
+                            <small class="text-muted">Status:</small><br>
+                            <span class="badge bg-success">Processada</span>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted">Data/Hora de Processamento:</small><br>
+                            <strong>@Model.DataProcessamento.ToString("dd/MM/yyyy HH:mm:ss")</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@
