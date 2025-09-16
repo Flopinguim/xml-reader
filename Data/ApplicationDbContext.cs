@@ -18,7 +18,21 @@ namespace xml_reader.Data
 
             modelBuilder.Entity<NotaFiscal>(entity =>
             {
-                entity.ToTable("NotasFiscais");             
+                entity.ToTable("NotasFiscais");
+                
+                entity.HasKey(e => e.IdNotaFiscal);
+                
+                entity.Ignore(e => e.Prestador);
+                entity.Ignore(e => e.Tomador);
+                entity.Ignore(e => e.Servico);
+                
+                entity.Property(e => e.Numero).HasMaxLength(50);
+                entity.Property(e => e.PrestadorCNPJ).HasMaxLength(18);
+                entity.Property(e => e.TomadorCNPJ).HasMaxLength(18);
+                entity.Property(e => e.ServicoDescricao).HasMaxLength(500);
+                entity.Property(e => e.ServicoValor).HasMaxLength(20);
+                entity.Property(e => e.DataEmissao).HasMaxLength(50);
+                entity.Property(e => e.NomeArquivo).HasMaxLength(255);
             });
         }
     }

@@ -1,21 +1,10 @@
-using System.ComponentModel.DataAnnotations;
+ï»¿using System.ComponentModel.DataAnnotations;
 
 namespace xml_reader.ViewModels
 {
-    public class UploadXmlViewModel
-    {
-        [Required(ErrorMessage = "Selecione pelo menos um arquivo XML")]
-        [Display(Name = "Arquivos XML")]
-        public List<IFormFile> XmlFiles { get; set; } = new List<IFormFile>();
-
-        public List<string> ProcessingResults { get; set; } = new List<string>();
-        public bool HasErrors { get; set; }
-        public List<string> ErrorMessages { get; set; } = new List<string>();
-    }
-
     public class SearchViewModel
     {
-        [Display(Name = "Número da Nota")]
+        [Display(Name = "NÃºmero da Nota")]
         public string? NumeroNota { get; set; }
 
         [Display(Name = "CNPJ do Prestador")]
@@ -24,7 +13,7 @@ namespace xml_reader.ViewModels
         [Display(Name = "CNPJ do Tomador")]
         public string? CnpjTomador { get; set; }
 
-        [Display(Name = "Data de Início")]
+        [Display(Name = "Data de InÃ­cio")]
         [DataType(DataType.Date)]
         public DateTime? DataInicio { get; set; }
 

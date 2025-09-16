@@ -1,124 +1,111 @@
-//using Microsoft.EntityFrameworkCore;
-//using xml_reader.Data;
-//using xml_reader.Models;
+using Microsoft.EntityFrameworkCore;
+using xml_reader.Data;
+using xml_reader.Models;
 
-//namespace xml_reader.Services
-//{
-//    public class NotaFiscalService
-//    {
-//        private readonly ApplicationDbContext _context;
-//        private readonly ILogger<NotaFiscalService> _logger;
+namespace xml_reader.Services
+{
+    public class NotaFiscalService
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly ILogger<NotaFiscalService> _logger;
 
-//        public NotaFiscalService(ApplicationDbContext context, ILogger<NotaFiscalService> logger)
-//        {
-//            _context = context;
-//            _logger = logger;
-//        }
+        public NotaFiscalService(ApplicationDbContext context, ILogger<NotaFiscalService> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
 
-//        public async Task<List<NotaFiscal>> GetAllAsync()
-//        {
-//            return await _context.NotasFiscais
-//                .OrderByDescending(nf => nf.DataProcessamento)
-//                .ToListAsync();
-//        }
+        public async Task<List<NotaFiscal>> BuscarNotasFiscais()
+        {
+            return await _context.NotasFiscais
+                .OrderByDescending(nf => nf.Numero)
+                .ToListAsync();
+        }
 
-//        public async Task<NotaFiscal?> GetByIdAsync(int id)
-//        {
-//            return await _context.NotasFiscais.FindAsync(id);
-//        }
+        public async Task<NotaFiscal?> BuscarNotaFiscalAsync(int id)
+        {
+            return await _context.NotasFiscais.FindAsync(id);
+        }
 
-//        public async Task<List<NotaFiscal>> SaveNotasFiscaisAsync(List<NotaFiscal> notasFiscais)
-//        {
-//            var savedNotasFiscais = new List<NotaFiscal>();
-            
-//            foreach (var notaFiscal in notasFiscais)
-//            {
-//                try
-//                {
-//                    // Check if invoice already exists
-//                    var existing = await _context.NotasFiscais
-//                        .FirstOrDefaultAsync(nf => 
-//                            nf.NumeroNota == notaFiscal.NumeroNota && 
-//                            nf.CnpjPrestador == notaFiscal.CnpjPrestador);
+        public async Task<List<NotaFiscal>> SalvarNotasFiscaisAsync(List<NotaFiscal> notasFiscais)
+        {
+            var notasFiscaisSalvas = new List<NotaFiscal>();
 
-//                    if (existing != null)
-//                    {
-//                        _logger.LogWarning("Nota fiscal já existe: {NumeroNota} - {CnpjPrestador}", 
-//                            notaFiscal.NumeroNota, notaFiscal.CnpjPrestador);
-//                        continue;
-//                    }
+            foreach (var notaFiscal in notasFiscais)
+            {
+                try
+                {
+                    var notaFiscalExistente = await _context.NotasFiscais
+                        .FirstOrDefaultAsync(nf =>
+                            nf.Numero == notaFiscal.Numero &&
+                            nf.PrestadorCNPJ == notaFiscal.PrestadorCNPJ);
 
-//                    notaFiscal.DataProcessamento = DateTime.Now;
-//                    _context.NotasFiscais.Add(notaFiscal);
-//                    savedNotasFiscais.Add(notaFiscal);
-//                }
-//                catch (Exception ex)
-//                {
-//                    _logger.LogError(ex, "Erro ao salvar nota fiscal: {NumeroNota}", notaFiscal.NumeroNota);
-//                    throw;
-//                }
-//            }
+                    if (notaFiscalExistente != null)
+                    {
+                        _logger.LogWarning($"Nota fiscal já existe: {notaFiscalExistente.Numero}");
+                        continue;
+                    }
 
-//            if (savedNotasFiscais.Any())
-//            {
-//                await _context.SaveChangesAsync();
-//                _logger.LogInformation("Salvadas {Count} notas fiscais no banco de dados", savedNotasFiscais.Count);
-//            }
+                    _context.NotasFiscais.Add(notaFiscal);
+                    notasFiscaisSalvas.Add(notaFiscal);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, $"Erro ao salvar nota fiscal: {notaFiscal.Numero}");
+                    throw;
+                }
+            }
 
-//            return savedNotasFiscais;
-//        }
+            if (notasFiscaisSalvas.Any())
+            {
+                await _context.SaveChangesAsync();
+                _logger.LogInformation($"Salvadas {notasFiscaisSalvas.Count} notas fiscais no banco de dados");
+            }
 
-//        public async Task<List<NotaFiscal>> SearchAsync(string? numeroNota = null, 
-//            string? cnpjPrestador = null, 
-//            string? cnpjTomador = null,
-//            DateTime? dataInicio = null,
-//            DateTime? dataFim = null)
-//        {
-//            var query = _context.NotasFiscais.AsQueryable();
+            return notasFiscaisSalvas;
+        }
 
-//            if (!string.IsNullOrEmpty(numeroNota))
-//            {
-//                query = query.Where(nf => nf.NumeroNota.Contains(numeroNota));
-//            }
+        public async Task<List<NotaFiscal>> ProcurarNotasFiltroAsync(string? Numero = null, string? PrestadorCNPJ = null, string? TomadorCNPJ = null, DateTime? dataInicio = null, DateTime? dataFim = null)
+        {
+            var query = _context.NotasFiscais.AsQueryable();
 
-//            if (!string.IsNullOrEmpty(cnpjPrestador))
-//            {
-//                var cnpjLimpo = new string(cnpjPrestador.Where(char.IsDigit).ToArray());
-//                query = query.Where(nf => nf.CnpjPrestador.Contains(cnpjLimpo));
-//            }
+            if (!string.IsNullOrEmpty(Numero))
+                query = query.Where(nf => nf.Numero.Contains(Numero));
 
-//            if (!string.IsNullOrEmpty(cnpjTomador))
-//            {
-//                var cnpjLimpo = new string(cnpjTomador.Where(char.IsDigit).ToArray());
-//                query = query.Where(nf => nf.CnpjTomador.Contains(cnpjLimpo));
-//            }
+            if (!string.IsNullOrEmpty(PrestadorCNPJ))
+            {
+                var cnpjLimpo = new string(PrestadorCNPJ.Where(char.IsDigit).ToArray());
+                query = query.Where(nf => nf.PrestadorCNPJ.Contains(cnpjLimpo));
+            }
 
-//            if (dataInicio.HasValue)
-//            {
-//                query = query.Where(nf => nf.DataEmissao >= dataInicio.Value);
-//            }
+            if (!string.IsNullOrEmpty(TomadorCNPJ))
+            {
+                var cnpjLimpo = new string(TomadorCNPJ.Where(char.IsDigit).ToArray());
+                query = query.Where(nf => nf.TomadorCNPJ.Contains(cnpjLimpo));
+            }
 
-//            if (dataFim.HasValue)
-//            {
-//                query = query.Where(nf => nf.DataEmissao <= dataFim.Value);
-//            }
+            if (dataInicio.HasValue)
+                query = query.Where(nf => DateTime.Parse(nf.DataEmissao) >= dataInicio.Value);
 
-//            return await query
-//                .OrderByDescending(nf => nf.DataEmissao)
-//                .ToListAsync();
-//        }
+            if (dataFim.HasValue)
+                query = query.Where(nf => DateTime.Parse(nf.DataEmissao) <= dataFim.Value);
 
-//        public async Task<decimal> GetTotalValueByPeriodAsync(DateTime dataInicio, DateTime dataFim)
-//        {
-//            return await _context.NotasFiscais
-//                .Where(nf => nf.DataEmissao >= dataInicio && nf.DataEmissao <= dataFim)
-//                .SumAsync(nf => nf.ValorTotal);
-//        }
+            return await query
+                .OrderByDescending(nf => nf.DataEmissao)
+                .ToListAsync();
+        }
 
-//        public async Task<int> GetCountByPrestadorAsync(string cnpjPrestador)
-//        {
-//            return await _context.NotasFiscais
-//                .CountAsync(nf => nf.CnpjPrestador == cnpjPrestador);
-//        }
-//    }
-//}
+        public async Task<decimal> BuscarValorPelaDataAsync(DateTime dataInicio, DateTime dataFim)
+        {
+            return await _context.NotasFiscais
+                .Where(nf => DateTime.Parse(nf.DataEmissao) >= dataInicio && DateTime.Parse(nf.DataEmissao) <= dataFim)
+                .SumAsync(nf => decimal.Parse(nf.ServicoValor));
+        }
+
+        public async Task<int> BuscarQuantidadeDeNotasAsync(string PrestadorCNPJ)
+        {
+            return await _context.NotasFiscais
+                .CountAsync(nf => nf.PrestadorCNPJ == PrestadorCNPJ);
+        }
+    }
+}

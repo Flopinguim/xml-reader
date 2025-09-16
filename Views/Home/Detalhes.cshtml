@@ -1,4 +1,4 @@
-@* @model xml_reader.Models.NotaFiscal
+@model xml_reader.Models.NotaFiscal
 @{
     ViewData["Title"] = "Detalhes da Nota Fiscal";
 }
@@ -22,7 +22,7 @@
                 <div class="card-header bg-primary text-white">
                     <h3 class="mb-0">
                         <i class="fas fa-file-invoice"></i>
-                        Nota Fiscal Nº @Model.NumeroNota
+                        Nota Fiscal Nº @Model.Numero
                     </h3>
                 </div>
                 <div class="card-body">
@@ -32,17 +32,17 @@
                             <table class="table table-borderless">
                                 <tr>
                                     <td><strong>Número da Nota:</strong></td>
-                                    <td>@Model.NumeroNota</td>
+                                    <td>@Model.Numero</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Data de Emissão:</strong></td>
-                                    <td>@Model.DataEmissao.ToString("dd/MM/yyyy")</td>
+                                    <td>@Model.DataEmissao</td>
                                 </tr>
                                 <tr>
                                     <td><strong>Valor Total:</strong></td>
                                     <td>
                                         <span class="h5 text-success">
-                                            @Model.ValorTotal.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                                            @Model.ServicoValor
                                         </span>
                                     </td>
                                 </tr>
@@ -63,7 +63,7 @@
                                     <td><strong>Processado em:</strong></td>
                                     <td>
                                         <small class="text-muted">
-                                            @Model.DataProcessamento.ToString("dd/MM/yyyy HH:mm:ss")
+                                            @Model.DataEmissao
                                         </small>
                                     </td>
                                 </tr>
@@ -76,7 +76,7 @@
                                     <td><strong>CNPJ:</strong></td>
                                     <td>
                                         <span class="font-monospace">
-                                            @($"{Model.CnpjPrestador.Substring(0, 2)}.{Model.CnpjPrestador.Substring(2, 3)}.{Model.CnpjPrestador.Substring(5, 3)}/{Model.CnpjPrestador.Substring(8, 4)}-{Model.CnpjPrestador.Substring(12, 2)}")
+                                            @($"{Model.PrestadorCNPJ.Substring(0, 2)}.{Model.PrestadorCNPJ.Substring(2, 3)}.{Model.PrestadorCNPJ.Substring(5, 3)}/{Model.PrestadorCNPJ.Substring(8, 4)}-{Model.PrestadorCNPJ.Substring(12, 2)}")
                                         </span>
                                     </td>
                                 </tr>
@@ -88,7 +88,7 @@
                                     <td><strong>CNPJ:</strong></td>
                                     <td>
                                         <span class="font-monospace">
-                                            @($"{Model.CnpjTomador.Substring(0, 2)}.{Model.CnpjTomador.Substring(2, 3)}.{Model.CnpjTomador.Substring(5, 3)}/{Model.CnpjTomador.Substring(8, 4)}-{Model.CnpjTomador.Substring(12, 2)}")
+                                            @($"{Model.TomadorCNPJ.Substring(0, 2)}.{Model.TomadorCNPJ.Substring(2, 3)}.{Model.TomadorCNPJ.Substring(5, 3)}/{Model.TomadorCNPJ.Substring(8, 4)}-{Model.TomadorCNPJ.Substring(12, 2)}")
                                         </span>
                                     </td>
                                 </tr>
@@ -100,7 +100,7 @@
                         <div class="col-md-12">
                             <h5 class="text-primary">Descrição do Serviço</h5>
                             <div class="border rounded p-3 bg-light">
-                                <p class="mb-0">@Model.DescricaoServico</p>
+                                <p class="mb-0">@Model.ServicoDescricao</p>
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <small class="text-muted">ID no Sistema:</small><br>
-                            <strong>@Model.Id</strong>
+                            <strong>@Model.IdNotaFiscal</strong>
                         </div>
                         <div class="col-md-3">
                             <small class="text-muted">Status:</small><br>
@@ -123,11 +123,11 @@
                         </div>
                         <div class="col-md-6">
                             <small class="text-muted">Data/Hora de Processamento:</small><br>
-                            <strong>@Model.DataProcessamento.ToString("dd/MM/yyyy HH:mm:ss")</strong>
+                            <strong>@Model.DataEmissao</strong>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div> *@
+</div>

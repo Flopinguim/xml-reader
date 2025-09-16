@@ -13,12 +13,12 @@
                     <h3>Upload de Arquivos XML</h3>
                 </div>
                 <div class="card-body">
-                    @if (Model.HasErrors)
+                    @if (Model.PossuiErros)
                     {
                         <div class="alert alert-danger">
                             <h4>Erros encontrados:</h4>
                             <ul>
-                                @foreach (var error in Model.ErrorMessages)
+                                @foreach (var error in Model.MensagensErro)
                                 {
                                     <li>@error</li>
                                 }
@@ -26,12 +26,12 @@
                         </div>
                     }
 
-                    @if (Model.ProcessingResults.Any())
+                    @if (Model.ProcessamentoResultado.Any())
                     {
                         <div class="alert alert-success">
                             <h4>Processamento concluído:</h4>
                             <ul>
-                                @foreach (var result in Model.ProcessingResults)
+                                @foreach (var result in Model.ProcessamentoResultado)
                                 {
                                     <li>@result</li>
                                 }
@@ -41,9 +41,9 @@
 
                     <form asp-action="Index" method="post" enctype="multipart/form-data">
                         <div class="mb-3">
-                            <label asp-for="XmlFiles" class="form-label"></label>
-                            <input asp-for="XmlFiles" type="file" class="form-control" multiple accept=".xml" />
-                            <span asp-validation-for="XmlFiles" class="text-danger"></span>
+                            <label asp-for="ArquivosXml" class="form-label"></label>
+                            <input asp-for="ArquivosXml" type="file" class="form-control" multiple accept=".xml" />
+                            <span asp-validation-for="ArquivosXml" class="text-danger"></span>
                             <div class="form-text">
                                 Selecione um ou mais arquivos XML de notas fiscais de serviço (NFS-e).
                             </div>
@@ -77,28 +77,6 @@
                                 <i class="fas fa-search"></i> Buscar
                             </a>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Informações sobre o Sistema</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Este sistema é capaz de processar arquivos XML de Notas Fiscais de Serviço (NFS-e) e extrair as seguintes informações:</p>
-                        <ul>
-                            <li><strong>Número da Nota:</strong> Identificação única da nota fiscal</li>
-                            <li><strong>CNPJ do Prestador:</strong> Documento do fornecedor do serviço</li>
-                            <li><strong>CNPJ do Tomador:</strong> Documento do contratante do serviço</li>
-                            <li><strong>Data de Emissão:</strong> Quando a nota foi emitida</li>
-                            <li><strong>Descrição do Serviço:</strong> Detalhes dos serviços prestados</li>
-                            <li><strong>Valor Total:</strong> Valor monetário dos serviços</li>
-                        </ul>
-                        <p class="text-muted">
-                            Os dados extraídos são armazenados em um banco de dados SQL Server para consulta posterior.
-                        </p>
                     </div>
                 </div>
             </div>
